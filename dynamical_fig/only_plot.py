@@ -30,13 +30,12 @@ def read_date(csv_file, f):
 def main_code(csv_file, port_ad, port_num, f):
     fig, ax = plt.subplots(1, 1)# 描画領域を取得
     ax.set_ylim((0, 5))# y軸方向の描画幅を指定
-    # 周波数を高くしていく
     while True:
-        #get_date(csv_file, port_ad, port_num)
+        get_date(csv_file, port_ad, port_num)
         x, y = read_date(csv_file, f)
 
         line, = ax.plot(x, y, color='blue')# グラフを描画する
-        plt.pause(f)# 次の描画まで0.01秒待つ
+        plt.pause(f)# 次の描画までf秒待つ
         line.remove()# グラフをクリア
 
 
