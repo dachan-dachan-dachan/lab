@@ -13,7 +13,7 @@ import serial
 
 def get_date(csv_file, port_ad, port_num):#https://qiita.com/ryota765/items/0cfc2ea2d598de11b174
     ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
-    value = float(ser.readline().decode("UTF-8").rstrip("\n"))
+    value = float(ser.readline().decode("utf-8").rstrip("\n"))
 #    print(value)
 #    with open(csv_file, "a") as fi:
 #        print("{}".format(value), file=fi)
@@ -49,4 +49,4 @@ port_num = 9600
 csv_file = 'voltage.csv'
 
 if __name__ == '__main__':
-    main_code(port_ad, csv_file, f)
+    main_code(port_ad, port_num, csv_file, f)
