@@ -6,9 +6,10 @@ import serial
 import csv
 import plotly.express as px
 
-def get_date(csv_file, port_ad, port_num):#https://qiita.com/ryota765/items/0cfc2ea2d598de11b174
+def get_date(csv_file, port_ad, port_num):#参考：https://qiita.com/ryota765/items/0cfc2ea2d598de11b174
     ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
-    value = float(ser.readline().decode("UTF-8").rstrip("\n"))
+    value = int(ser.readline().decode("UTF-8").rstrip("\n"))
+    value /= 1023
 #    print(value)
 #    with open(csv_file, "a") as fi:
 #        print("{}".format(value), file=fi)
