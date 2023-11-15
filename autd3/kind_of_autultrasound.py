@@ -35,28 +35,27 @@ if __name__ == "__main__":
     y = 0.0
     z = 150.0
         while True:
-            while True:
-                g = Focus(autd.geometry.center + np.array([x, y, z]))
-                m = Sine(150)
-                autd.send((m, g))
-                print("Focus")
-                time.sleep(interval)
+            g = Focus(autd.geometry.center + np.array([x, y, z]))
+            m = Sine(150)
+            autd.send((m, g))
+            print("Focus")
+            #time.sleep(interval)
+            _ = input()
 
-            while True:
-                g = BesselBeam(autd.geometry.center + np.array([x, y, z]))
-                m = Sine(150)
-                autd.send((m, g))
-                print("BesselBeam")
-                time.sleep(interval)
+            g = BesselBeam(autd.geometry.center + np.array([x, y, z]))
+            m = Sine(150)
+            autd.send((m, g))
+            print("BesselBeam")
+            #time.sleep(interval)
+            _ = input()
 
-            while True:
-                g = PlaneWave(autd.geometry.center + np.array([x, y, z]))
-                m = Sine(150)
-                autd.send((m, g))
-                print("PlaneWave")
-                time.sleep(interval)
+            g = PlaneWave(autd.geometry.center + np.array([x, y, z]))
+            m = Sine(150)
+            autd.send((m, g))
+            print("PlaneWave")
+            #time.sleep(interval)
+            _ = input()
 
 
     _ = input()
-
     autd.close()
