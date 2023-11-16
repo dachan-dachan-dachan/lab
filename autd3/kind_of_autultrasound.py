@@ -1,6 +1,8 @@
 from pyautd3 import AUTD3, Controller, Silencer
 from pyautd3.link.soem import SOEM, OnErrFunc
 from pyautd3.gain import Focus
+from pyautd3.gain import Bessel
+
 from pyautd3.modulation import Sine
 
 import numpy as np
@@ -42,7 +44,9 @@ if __name__ == "__main__":
             #time.sleep(interval)
             _ = input()
 
-            g = BesselBeam(autd.geometry.center + np.array([x, y, z]))
+            nx, ny, nz = 0, 0, 1
+            theta = math.radians(30)
+            g = Bessel([x, y, z], [nx, ny, nz], theta)
             m = Sine(150)
             autd.send((m, g))
             print("BesselBeam")
