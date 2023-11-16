@@ -40,7 +40,8 @@ if __name__ == "__main__":
     ny = 0
     nz = 1
         while True:
-            g = Focus(autd.geometry.center + np.array([x, y, z]))
+            #g = Focus(autd.geometry.center + np.array([x, y, z]))
+            g = Focus([x, y, z])
             m = Sine(150)
             autd.send((m, g))
             print("Focus")
