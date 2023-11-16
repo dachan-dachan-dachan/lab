@@ -2,7 +2,7 @@ from pyautd3 import AUTD3, Controller, Silencer
 from pyautd3.link.soem import SOEM, OnErrFunc
 from pyautd3.gain import Focus
 from pyautd3.gain import Bessel
-
+from pyautd3.gain import Plane
 from pyautd3.modulation import Sine
 
 import numpy as np
@@ -36,6 +36,9 @@ if __name__ == "__main__":
     x = 0.0
     y = 0.0
     z = 150.0
+    nx = 0
+    ny = 0
+    nz = 1
         while True:
             g = Focus(autd.geometry.center + np.array([x, y, z]))
             m = Sine(150)
@@ -53,7 +56,7 @@ if __name__ == "__main__":
             #time.sleep(interval)
             _ = input()
 
-            g = PlaneWave(autd.geometry.center + np.array([x, y, z]))
+            g = Plane([nx, ny, nz])
             m = Sine(150)
             autd.send((m, g))
             print("PlaneWave")
