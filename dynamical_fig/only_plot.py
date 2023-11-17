@@ -9,13 +9,13 @@ import plotly.express as px
 def get_date(csv_file, port_ad, port_num):#参考：https://qiita.com/ryota765/items/0cfc2ea2d598de11b174
     ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
     value = int(ser.readline().decode("UTF-8").rstrip("\n"))
-    value /= 1023
-#    print(value)
+    volt = 5 * value / 1023
+#    print(volt)
 #    with open(csv_file, "a") as fi:
-#        print("{}".format(value), file=fi)
+#        print("{}".format(volt), file=fi)
     with open(csv_file, 'a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([value])
+        writer.writerow([volt])
 
 
 def read_date(csv_file, f):
