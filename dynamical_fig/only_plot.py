@@ -6,13 +6,11 @@ import serial
 import csv
 import plotly.express as px
 
-def get_date(csv_file, port_ad, port_num):#参考：https://qiita.com/ryota765/items/0cfc2ea2d598de11b174
-    ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
-    value = int(ser.readline().decode("UTF-8").rstrip("\n"))
-    volt = round(5*value/1023,2)#5/(2^10 -1)=0.0049より有効桁数は小数第2位で設定
-#    print(volt)
-#    with open(csv_file, "a") as fi:
-#        print("{}".format(volt), file=fi)
+def get_date(csv_file, port_ad, port_num):# 参考：https://qiita.com/ryota765/items/0cfc2ea2d598de11b174
+    ser = serial.Serial(port_ad, port_num)# ポートの情報(str, int)
+    value = int(ser.readline().decode("UTF-8").rstrip("\n"))# 10bitでの整数値(valie = 0, 1, 2,,,2^10-1)を受け取る
+    volt = round(5*value/1023,2)# 5/(2^10 -1)~=0.0049より有効桁数は小数第2位で設定
+    print(volt)
     with open(csv_file, 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([volt])
