@@ -9,7 +9,7 @@ import plotly.express as px
 def get_date(csv_file, port_ad, port_num):#参考：https://qiita.com/ryota765/items/0cfc2ea2d598de11b174
     ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
     value = int(ser.readline().decode("UTF-8").rstrip("\n"))
-    volt = 5 * value / 1023
+    volt = round(5*value/1023,2)#5/(2^10 -1)=0.00449より有効桁数は小数第2位で設定
 #    print(volt)
 #    with open(csv_file, "a") as fi:
 #        print("{}".format(volt), file=fi)
