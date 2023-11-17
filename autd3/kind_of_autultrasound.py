@@ -64,6 +64,4 @@ if __name__ == "__main__":
             #time.sleep(interval)
             _ = input()
 
-
-    _ = input()
     autd.close()
