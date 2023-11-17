@@ -39,6 +39,7 @@ if __name__ == "__main__":
     nx = 0
     ny = 0
     nz = 1
+    theta = math.radians(30)
         while True:
             #g = Focus(autd.geometry.center + np.array([x, y, z]))
             g = Focus([x, y, z])
@@ -48,8 +49,6 @@ if __name__ == "__main__":
             #time.sleep(interval)
             _ = input()
 
-            nx, ny, nz = 0, 0, 1
-            theta = math.radians(30)
             g = Bessel([x, y, z], [nx, ny, nz], theta)
             m = Sine(150)
             autd.send((m, g))
