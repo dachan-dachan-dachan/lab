@@ -37,19 +37,24 @@ if __name__ == "__main__":
     y = 0.0
     z = 150.0
     z_0 = 150.0
+    time = 0.0
     while True:
+        start_time = time.perf_counter()
         t += omega
-        """
+        
         z = 100*(1+math.sin(t))
         x = r*math.cos(t)
         y = r*math.sin(t)
-        """
+        
         time.sleep(omega)
-        print(f"t={t},x={x},y={y},z={z}")
+        print(f"t={t},x={x},y={y},z={z},time={time}")
 
         g = Focus(autd.geometry.center + np.array([x, y, z]))
         m = Sine(150)
         autd.send((m, g))
+
+        end_time = time.perf_counter()
+        time += (end_time - start_time)
 
     _ = input()
 
