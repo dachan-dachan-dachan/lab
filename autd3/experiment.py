@@ -60,6 +60,8 @@ if __name__ == "__main__":
     end = 3000# 3000 mm 終了(センサの位置)
     velocity = 10# 10 mm/s (焦点の移動する速度)
     theta = math.atan2(Lx/2, z)
+    _ = input()
+    print("start")
         while True:
             theta = math.atan2(Lx/2, z)
             z = z_route(z, start, end, velocity, interval)
