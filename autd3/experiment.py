@@ -55,7 +55,7 @@ if __name__ == "__main__":
     nx = 0
     ny = 0
     nz = 1
-    Lx = 192
+    Lx = 192# 横幅(mm)
     start = 0# 0 mm スタート
     end = 3000# 3000 mm 終了(センサの位置)
     velocity = 10# 10 mm/s (焦点の移動する速度)
