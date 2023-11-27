@@ -13,6 +13,21 @@ import ctypes
 import time
 import math
 
+
+def z_route(now, start, end, velocity, f):
+    if start <= end:
+        if now < end:
+            now += velocity*f
+        else:
+            now = start
+    else:
+        if end < now:
+            now -= velocity*f
+        else:
+            now = start
+    return now
+
+
 def on_lost(msg: ctypes.c_char_p):
     print(msg.decode("utf-8"), end="")
     os._exit(-1)
@@ -32,20 +47,24 @@ if __name__ == "__main__":
 
     autd.send(Silencer())
 
-    interval = 10
+    interval = 0.5# 0.5 sごとに周期を回す
+    
     x = 0.0
     y = 0.0
-    z = 150.0
+    z = 0.0
     nx = 0
     ny = 0
     nz = 1
     Lx = 192
+    start = 0# 0 mm スタート
+    end = 3000# 3000 mm 終了(センサの位置)
+    velocity = 10# 10 mm/s (焦点の移動する速度)
     theta = math.atan2(Lx/2, z)
         while True:
             theta = math.atan2(Lx/2, z)
+            z = z_route(z, start, end, velocity, interval)
             g = Bessel([x, y, z], [nx, ny, nz], theta)
             m = Sine(150)
             autd.send((m, g))
-            print("BesselBeam")
             time.sleep(interval)
     autd.close()
