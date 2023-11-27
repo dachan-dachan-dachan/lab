@@ -39,9 +39,8 @@ if __name__ == "__main__":
     nx = 0
     ny = 0
     nz = 1
-    #Lx =
-    theta = math.radians(30)
-    #theta = math.atan2(Lx/2, z)
+    Lx = 192
+    theta = math.atan2(Lx/2, z)
         while True:
             #g = Focus(autd.geometry.center + np.array([x, y, z]))
             g = Focus([x, y, z])
