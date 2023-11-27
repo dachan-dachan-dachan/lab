@@ -62,11 +62,11 @@ if __name__ == "__main__":
     theta = math.atan2(Lx/2, z)
     _ = input()
     print("start")
-        while True:
-            theta = math.atan2(Lx/2, z)
-            z = z_route(z, start, end, velocity, interval)
-            g = Bessel([x, y, z], [nx, ny, nz], theta)
-            m = Sine(150)
-            autd.send((m, g))
-            time.sleep(interval)
+    while True:
+        theta = math.atan2(Lx/2, z)
+        z = z_route(z, start, end, velocity, interval)
+        g = Bessel([x, y, z], [nx, ny, nz], theta)
+        m = Sine(150)
+        autd.send((m, g))
+        time.sleep(interval)
     autd.close()
