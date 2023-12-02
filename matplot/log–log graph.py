@@ -3,22 +3,26 @@ import matplotlib.image as mpimg
 import numpy as np
 
 
-def custom_log(x, base):#base：底，x：値
-    return np.log(x) / np.log(base)
+def custom_log(x, base):#base：底，x：真数
+    return np.log(x)/np.log(base)
 
+
+
+######################################################
 def func(x):#両対数における折れ線近似
     if x < 100:
         return 101*(x**(-0.85))
     else:
         return 35*(x**(-0.62))
 
-
-pict_name = 'b.png'
+pict_name = 'b.png'#背景画像
 x_min = 10
 x_max = 10000
 y_min = 0.1
 y_max = 100
 base = 10#ログの底
+######################################################
+
 
 
 background_image = mpimg.imread(pict_name)#画像の読み込み
