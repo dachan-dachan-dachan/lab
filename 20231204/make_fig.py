@@ -24,7 +24,7 @@ def plot(csv_file_name, color, N_air, label):
         value.append(from_N_make_ppm(N_air, df[i]))
     plt.plot(t, value, marker="o", linestyle="", label = label, color=color)
 
-N_air = 252
+#N_air = 252
 y_lim = 5000
 y_valid_min = 50
 #csv_file = "data.csv"
@@ -38,9 +38,7 @@ if __name__ == "__main__":
     plt.ylabel("concentration [ppm]")
     plt.title("ppm-t")
     
-    point_color = "blue"
-    csv_file_name = "data.csv"
-    label = "1"
+    N_air = float(input("空気中のセンサの出力値："))
     file_num = int(input("読み込むcsvファイルの個数を入力："))
     for i in range(file_num):
         csv_file_name = input(f"{i+1}個目のcsvファイル名：")
