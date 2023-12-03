@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 
 
 def from_N_make_ppm(N_air, N_alc):
