@@ -1,8 +1,6 @@
 from pyautd3 import AUTD3, Controller, Silencer
 from pyautd3.link.soem import SOEM, OnErrFunc
-from pyautd3.gain import Focus
 from pyautd3.gain import Bessel
-from pyautd3.gain import Plane
 from pyautd3.gain import Null
 from pyautd3.modulation import Sine
 
@@ -37,7 +35,7 @@ if __name__ == "__main__":
 
     autd.send(Silencer())
 
-    interval = 60
+    interval = 60*10
     x = 0.0
     y = 0.0
     z = 150.0
@@ -45,69 +43,34 @@ if __name__ == "__main__":
     ny = 0
     nz = 1
     Lx = 192
-    beam_of_kind = int(input("0:bessel,1:focus,2:plane,3:null ："))
-    if beam_of_kind == 3:
-        z = 0
-    else:
-        z = float(input("焦点の位置を入力："))
-    alc = float(input("アルコールの位置を入力："))
-    
-    
 
     f = 0.1
     port_ad = 'COM3'
     port_num = 9600
     ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
 
-    csv_file = "20231130.csv"
-        
-    if beam_of_kind == 0:
-        theta = math.atan2(Lx/2, z)
-        g = Bessel((autd.geometry.center + np.array([x, y, z])), [nx, ny, nz], theta)
-    elif beam_of_kind == 1:
-        g = Focus((autd.geometry.center + np.array([x, y, z])))
-    elif beam_of_kind == 2:
-        g = Plane([nx, ny, nz])
-    elif beam_of_kind == 3:
-        g = Null()
+    csv_file = "20231204_straight.csv"
+    #csv_file = "20231204_oblique.csv"
+    
+    theta = math.atan2(Lx/2, z)
+    g = Bessel((autd.geometry.center + np.array([x, y, z])), [nx, ny, nz], theta)
+    #g = Null()
     
     m = Sine(150)
     autd.send((m, g))
     print(f"z={z}で{interval}秒の照射を開始")
 
-    max_value = 0.0
-    min_value = 1023.0
-    max_value_increased = 0.0
-    before_value = 1023.0
-
+    start_time = time.time()
     for i in range(int(interval/f)):
         value = float(ser.readline().decode('utf-8').rstrip('\n'))
-        if max_value < value:
-            max_value = value
-        if min_value > value:
-            min_value = value
-        if max_value_increased < value - before_value:
-            max_value_increased = value - before_value
-        before_value = value
+        with open(csv_file, 'a', newline='') as file:
+            writer.writerow(value)
         time.sleep(f)
-
+    end_time = time.time()
     autd.close()
     print(f"z={z}で{interval}秒の照射が終了")
-    print(f'最大値：{max_value}、最大増加量：{max_value_increased}')
+    print(f"実際にかかった時間は{end_time - start_time}秒です")
+    
+    import winsound
+    winsound.Beep(2000, 1000)
 
-    with open(csv_file, 'a', newline='') as file:
-        writer = csv.writer(file)
-        #writer.writerow([f"{z},{max_value},{max_value_increased}"])
-        date = []
-        date.append(beam_of_kind)
-        date.append(float(z))
-        date.append(float(alc))
-        date.append(int(min_value))
-        date.append(int(max_value))
-        date.append(int(max_value_increased))
-        writer.writerow(date)
-
-    while True:
-        value = float(ser.readline().decode('utf-8').rstrip('\n'))
-        print(value)
-        time.sleep(f)
