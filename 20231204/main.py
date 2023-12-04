@@ -38,12 +38,34 @@ if __name__ == "__main__":
     interval = 60*10
     x = 0.0
     y = 0.0
-    z = 150.0
+    z = 400
     nx = 0
     ny = 0
     nz = 1
-    Lx = 192
+    Lx = 10.16*18#https://shinolab.github.io/autd3/book/jp/Users_Manual/concept.html
 
+    #中心軸
+    x_0 = Lx / 2
+    y_0 = 0
+    z_0 = 0
+
+    #焦点(頂点)
+    x_1 = x_0 / 2
+    #x_1 = 0
+    y_1 = 0
+    z_1 = z / 2
+
+    #母線
+    x_2 = - x_0
+    y_2 = 0
+    z_2 = 0
+
+    temp_vector = np.array([x_1 - x_0, 0, z_1])
+    n_vector = temp_vector / math.sqrt(temp_vector.dot(temp_vector))
+    temp_vector = np.array([x_1 - x_2, 0, z_1])
+    m_vector = temp_vector / math.sqrt(temp_vector.dot(temp_vector))
+    theta = math.acos(n_vector.dot(m_vector))
+    
     f = 0.1
     port_ad = 'COM3'
     port_num = 9600
@@ -52,8 +74,9 @@ if __name__ == "__main__":
     csv_file = "20231204_straight.csv"
     #csv_file = "20231204_oblique.csv"
     
-    theta = math.atan2(Lx/2, z)
-    g = Bessel((autd.geometry.center + np.array([x, y, z])), [nx, ny, nz], theta)
+    #theta = math.atan2(Lx/2, z)
+    #g = Bessel((autd.geometry.center + np.array([x, y, z])), [nx, ny, nz], theta)
+    g = Bessel((autd.geometry.center + np.array([x_1, 0, z_1])), n_vector, theta)
     #g = Null()
     
     m = Sine(150)
