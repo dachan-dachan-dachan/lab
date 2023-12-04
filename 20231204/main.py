@@ -69,6 +69,10 @@ if __name__ == "__main__":
     end_time = time.time()
     autd.close()
     print(f"z={z}で{interval}秒の照射が終了")
+    with open(csv_file, 'r') as file:
+        reader = csv.reader(file)
+        row = sum(1 for row in reader)
+    print(f"{interval}秒で設定して{f}秒ごとにデータを取り，csvファイルには{row}個のデータが格納された")
     print(f"実際にかかった時間は{end_time - start_time}秒です")
     
     import winsound
