@@ -44,9 +44,11 @@ if __name__ == "__main__":
     nz = 1
     Lx = 10.16*18#https://shinolab.github.io/autd3/book/jp/Users_Manual/concept.html
 
-    rate = 1.5
+
     height = 0
     x_M = Lx / 2
+    rate_n_vector_x = 1.2
+    
 
     #センサS
     x_S = 0
@@ -60,8 +62,7 @@ if __name__ == "__main__":
     z_F = 150#200
 
     #第二引数：円錐の中心の単位ベクトルn
-    temp_vector = np.array([-x_F, height, z_S - z_F])
-    #temp_vector = np.array([-x_F*1.2, height, z_S - z_F])
+    temp_vector = np.array([-x_F*rate_n_vector_x, height, z_S - z_F])
     n_vector = temp_vector / (math.sqrt(temp_vector.dot(temp_vector)))
     
     #母線の単位ベクトルm
