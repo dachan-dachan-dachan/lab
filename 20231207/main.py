@@ -56,8 +56,8 @@ if __name__ == "__main__":
     z_S = 400
 
     #第一引：数焦点F
-    x_F = 50#60
-    #x_F = -50#-60    
+    x_F = 60
+    #x_F = -50#-60
     y_F = height
     z_F = 150#200
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     port_num = 9600
     ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
 
-    csv_file = "r.csv"
+    csv_file = "l.csv"
     
     #theta = math.atan2(Lx/2, z)
     #g = Bessel((autd.geometry.center + np.array([x, y, z])), [nx, ny, nz], theta)
@@ -85,6 +85,9 @@ if __name__ == "__main__":
     #g = Null()
     
     m = Sine(150)
+
+    if (ser.readline().decode('UTF-8').rstrip('\n')).replace(',', ''):
+        print("True")
 
     with open(csv_file, 'a', newline='') as file:
         print('{}'.format(f"{autd.geometry.center + np.array([x_F, height, z_F])},{n_vector},{theta}"),file=file)
