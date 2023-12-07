@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     height = 0
     x_M = Lx / 2
-    rate_n_vector_x = 1.2
+    rate_n_vector_x = 1.0
     
 
     #センサS
