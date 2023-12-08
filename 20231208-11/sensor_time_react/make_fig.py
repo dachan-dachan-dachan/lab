@@ -9,12 +9,10 @@ second_csv_file_name = "20231208_react_time_2.csv"
 third_csv_file_name = "20231208_react_time_3.csv"
 if __name__ == "__main__":
     fig, ax = plt.subplots()
-    ax.set_xlim(0, get_time)
-    ax.set_ylim(0, y_lim)
 
     plt.xlabel("time [s]")
     plt.ylabel("concentration level [-]")
-    plt.title("Time Diagram")
+    plt.title("ON-OFF Time Diagram")
     
     y_value = []
     get_time = []
@@ -37,9 +35,12 @@ if __name__ == "__main__":
     get_time.append(df[-1])
     del y_value[-1]
 
+    sum_time = get_time[0] + get_time[1] + get_time[2]
+    ax.set_xlim(0, sum_time)
+    ax.set_ylim(0, y_lim)
     
     data_number = len(y_value[0]) + len(y_value[1]) + len(y_value[2])
-    f = (get_time[0] + get_time[1] + get_time[2]) / data_number#サンプリング周期[s]
+    f = sum_time / data_number#サンプリング周期[s]
     t = []
     t.append([])
     t.append([])
@@ -57,8 +58,8 @@ if __name__ == "__main__":
     plt.scatter(t[len(y_value[0]):len(y_value[1])], y_value[1], marker="o", linestyle="", label = "ON", color = "blue", s = 2)
     plt.scatter(t[len(y_value[1]):len(y_value[2])], y_value[2], marker="o", linestyle="", color = "red", s = 2)
     """
-    plt.scatter(t[0], y_value[0], marker="o", linestyle="", label = "OFF", color = "red", s = 2)
-    plt.scatter(t[1], y_value[1], marker="o", linestyle="", label = "ON", color = "blue", s = 2)
+    plt.scatter(t[0], y_value[0], marker="o", linestyle="", label = f"OFF:0-{get_time[0]},{get_time[1]}-{get_time[2]}", color = "red", s = 2)
+    plt.scatter(t[1], y_value[1], marker="o", linestyle="", label = f"ON:{get_time[0]}-{get_time[1]}", color = "blue", s = 2)
     plt.scatter(t[2], y_value[2], marker="o", linestyle="", color = "red", s = 2)
     
     plt.legend(loc="upper left")
