@@ -3,6 +3,7 @@ from pyautd3.link.soem import SOEM, OnErrFunc
 from pyautd3.gain import Bessel
 from pyautd3.gain import Focus
 from pyautd3.gain import Null
+from pyautd3.gain import Group
 from pyautd3.modulation import Sine
 #from pyautd3 import AUTD3, Gain, Focus, BesselBeam
 
