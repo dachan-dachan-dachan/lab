@@ -66,7 +66,6 @@ if __name__ == "__main__":
     csv_file = f"20231210-z_S={z_S}-z_F={z_F}.csv"
     
 
-    vibrator = list(range(0, 18*14))
     bessel_vibrator = []
     focus_vibrator = []
     for i in range(0, 18*14):
