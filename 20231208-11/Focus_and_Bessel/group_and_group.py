@@ -133,6 +133,7 @@ if __name__ == "__main__":
     #autd.close()
     print("照射が終了")
     print(f"実際にかかった時間は{end_time - start_time}秒です")
+    print(f"Bessel：Focus={len(bessel_vibrator)}：{len(focus_vibrator)}")
 
     with open(csv_file, "a", newline="") as file:
         value = end_time - start_time
