@@ -1,145 +1,137 @@
+import asyncio
+import ctypes
+import os
+from typing import NoReturn
+
 from pyautd3 import AUTD3, Controller, Silencer
-from pyautd3.link.soem import SOEM, OnErrFunc
-from pyautd3.gain import Bessel
 from pyautd3.gain import Focus
-from pyautd3.gain import Null
-from pyautd3.gain import Group
+from pyautd3.gain import Bessel
+from pyautd3.gain import Plane
+from pyautd3.link.soem import SOEM, OnErrFunc
 from pyautd3.modulation import Sine
-#from pyautd3 import AUTD3, Gain, Focus, BesselBeam
+
+from pyautd3.gain import Focus, Group, Null
 
 import numpy as np
-
-import os
-import ctypes
-
-import time
 import math
 
+import time
 import serial
 import csv
 
 
-def on_lost(msg: ctypes.c_char_p):
+def on_lost(msg: ctypes.c_char_p) -> NoReturn:
     print(msg.decode("utf-8"), end="")
     os._exit(-1)
 
 
-if __name__ == "__main__":
+def on_err(msg: ctypes.c_char_p) -> None:
+    print(msg.decode("utf-8"), end="")
+
+
+async def main() -> None:
     on_lost_func = OnErrFunc(on_lost)
+    on_err_func = OnErrFunc(on_err)
 
-    autd = (
+    with await (
         Controller.builder()
-        .add_device(AUTD3.from_euler_zyz([0.0, 0.0, 0.0], [0.0, 0.0, 0.0]))
-        .open_with(SOEM.builder().with_on_lost(on_lost_func))
-    )
+        .add_device(AUTD3([0.0, 0.0, 0.0]))
+        .open_with_async(
+            SOEM.builder().with_on_lost(on_lost_func).with_on_err(on_err_func)
+        )
+    ) as autd:
+        firm_info_list = await autd.firmware_info_list_async()
+        print("\n".join([f"[{i}]: {firm}" for i, firm in enumerate(firm_info_list)]))
 
-    firm_info_list = autd.firmware_info_list()
-    print("\n".join([f"[{i}]: {firm}" for i, firm in enumerate(firm_info_list)]))
-
-    autd.send(Silencer())
-
-    interval = 60*3
-    
-    #センサの位置
-    x_S = 0
-    y_S = 0
-    z_S = 400
-
-    #焦点の位置
-    x_F = 0
-    y_F = 0
-    z_F = 200
-
-    #フェーズドアレイの幅
-    L_x = 10.16*18#https://shinolab.github.io/autd3/book/jp/Users_Manual/concept.html
-
-
-    #ベッセルビームとフォーカスの境界線
-    x_L = (L_x*z_F)/(2*z_S)
+        await autd.send_async(Silencer())
 
 
 
-    f = 0.1
-    port_ad = "COM3"
-    port_num = 9600
-    ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
+        ############################準備
+        f = 0.1#サンプリング周期
 
-    csv_file = f"20231210-z_S={z_S}-z_F={z_F}.csv"
-    
+        #センサの位置
+        x_S = 0
+        y_S = 0
+        z_S = 400
+        #焦点の位置
+        x_F = 0
+        y_F = 0
+        z_F = 200
 
-    bessel_vibrator = []
-    focus_vibrator = []
-    for i in range(0, 18*14):
-        if i == 19 or i == 20 or i == 34:
-            pass
-        elif ((i%18) < 17*(((L_x/2) - x_L)/L_x)) or ((i%18) > 17*(((L_x/2) + x_L)/L_x)):#外側
-            bessel_vibrator.append(i)
-        else:#内側
-            focus_vibrator.append(i)
+        L_x = 10.16*18#https://shinolab.github.io/autd3/book/jp/Users_Manual/concept.html
+        
+        x_L = (L_x*z_F)/(2*z_S)#ベッセルビームとフォーカスの境界線
 
-    for i in range(len(bessel_vibrator)):
-        if (bessel_vibrator[i] > 20) and (bessel_vibrator[i] < 34):
-            bessel_vibrator[i] -= 2
-        elif bessel_vibrator[i] > 34:
-            bessel_vibrator[i] -= 3
-    
-    for i in range(len(focus_vibrator)):
-        if (focus_vibrator[i] > 20) and (focus_vibrator[i] < 34):
-            focus_vibrator[i] -= 2
-        elif focus_vibrator[i] > 34:
-            focus_vibrator[i] -= 3
+        port_ad = "COM3"
+        port_num = 9600
+        ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
+        csv_file = f"20231210-z_S={z_S}-z_F={z_F}.csv"
+        
+        bessel_vibrator = []
+        focus_vibrator = []
+        for i in range(0, 18*14):
+            if i == 19 or i == 20 or i == 34:
+                pass
+            elif ((i%18) < 17*(((L_x/2) - x_L)/L_x)) or ((i%18) > 17*(((L_x/2) + x_L)/L_x)):#外側
+                bessel_vibrator.append(i)
+            else:#内側
+                focus_vibrator.append(i)
+        for i in range(len(bessel_vibrator)):#ネジの分ずらす
+            if (bessel_vibrator[i] > 20) and (bessel_vibrator[i] < 34):
+                bessel_vibrator[i] -= 2
+            elif bessel_vibrator[i] > 34:
+                bessel_vibrator[i] -= 3
+        for i in range(len(focus_vibrator)):#ネジの分ずらす
+            if (focus_vibrator[i] > 20) and (focus_vibrator[i] < 34):
+                focus_vibrator[i] -= 2
+            elif focus_vibrator[i] > 34:
+                focus_vibrator[i] -= 3
+        theta = math.atan2(L_x/2, z_S)
+        
+        g_1 = Bessel(autd.geometry.center + np.array([x_S, y_S, z_S]), [0, 0, 1], theta)
+        g_2 = Focus(autd.geometry.center + np.array([x_F, y_F, z_F]))
+        #g = (Group(lambda _, tr: bessel_vibrator if tr.idx in bessel_vibrator else focus_vibrator).set_gain(bessel_vibrator, g_1).set_gain(focus_vibrator, g_2))
+        g = (Group(lambda _, tr: "b" if tr.idx in bessel_vibrator else "f").set_gain("b", g_1).set_gain("f", g_2))
+        m = Sine(150)
+        ############################準備終了
 
+        ############################サンプリング開始
+        print("照射を開始")
+        start_time = time.time()
+        for i in range(int(30/f)):
+            value = float(ser.readline().decode("utf-8").rstrip("\n"))
+            with open(csv_file, "a", newline="") as file:
+                print('{}'.format(int(value)),file=file)
+            time.sleep(f)
+        
+        await autd.send_async(m, g)
+        for i in range(int(90/f)):
+            value = float(ser.readline().decode("utf-8").rstrip("\n"))
+            with open(csv_file, "a", newline="") as file:
+                print('{}'.format(int(value)),file=file)
+            time.sleep(f)
 
+        await autd.close_async()
+        for i in range(int(90/f)):
+            value = float(ser.readline().decode("utf-8").rstrip("\n"))
+            with open(csv_file, "a", newline="") as file:
+                print('{}'.format(int(value)),file=file)
+            time.sleep(f)
 
-    theta = math.atan2(L_x/2, z_S)
-    bessel_beam = Bessel((autd.geometry.center + np.array([x_S, y_S, z_S])), [0, 0, 1], theta)
-    #bessel_beam = BesselBeam(np.array([0, 0, 150.0]), 30000.0, 0)
-    #autd.append_gain(bessel_beam, range(1, autd.num_devices, 2))
-    autd.append_gain(bessel_beam, bessel_vibrator)
+        end_time = time.time()
+        #autd.close()
+        print("照射が終了")
+        print(f"実際にかかった時間は{end_time - start_time}秒です")
+        print(f"Bessel：Focus={len(bessel_vibrator)}：{len(focus_vibrator)}")
 
-    focus_focus = Focus(autd.geometry.center + np.array([x_F, y_F, z_F]))
-    #focus_focus = Null()
-    #autd.append_gain(focus_focus, range(0, autd.num_devices, 2))
-    autd.append_gain(focus_focus, focus_vibrator)
-
-    #m = Sine(150)
-    #autd.send((m, g))
-    #autd.send()
-
-    print("照射を開始")
-
-    start_time = time.time()
-
-    for i in range(int(30/f)):
-        value = float(ser.readline().decode("utf-8").rstrip("\n"))
         with open(csv_file, "a", newline="") as file:
+            value = end_time - start_time
             file.writerow(value)
-        time.sleep(f)
-    
-    autd.send()
-    for i in range(int(90/f)):
-        value = float(ser.readline().decode("utf-8").rstrip("\n"))
-        with open(csv_file, "a", newline="") as file:
-            file.writerow(value)
-        time.sleep(f)
+        ############################サンプリング終了
+        import winsound
+        winsound.Beep(2000, 1000)
 
-    autd.close()
-    for i in range(int(90/f)):
-        value = float(ser.readline().decode("utf-8").rstrip("\n"))
-        with open(csv_file, "a", newline="") as file:
-            file.writerow(value)
-        time.sleep(f)
 
-    end_time = time.time()
-    #autd.close()
-    print("照射が終了")
-    print(f"実際にかかった時間は{end_time - start_time}秒です")
-    print(f"Bessel：Focus={len(bessel_vibrator)}：{len(focus_vibrator)}")
-
-    with open(csv_file, "a", newline="") as file:
-        value = end_time - start_time
-        file.writerow(value)
-    
-
-    import winsound
-    winsound.Beep(2000, 500)
+if __name__ == "__main__":
+    asyncio.run(main())
