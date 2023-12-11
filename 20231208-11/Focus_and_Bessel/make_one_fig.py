@@ -4,7 +4,7 @@ import pandas as pd
 
 y_lim = 1023
 y_valid_min = 0
-file_name = "20231208_react_time_1.csv"
+file_name = "20231210-z_S=400-z_F=150.csv"
 if __name__ == "__main__":
     fig, ax = plt.subplots()
 
@@ -17,12 +17,15 @@ if __name__ == "__main__":
 
     df = pd.read_csv(file_name)
     df = df.iloc[1:, 0].values
-    y_value.append(df)
-    get_time.append(df[-1])
+    for i in range(len(df)):
+        y_value.append(df[i])
+    get_time = 30+90+90
+    """
     del y_value[0]
     del y_value[0]
     del y_value[0]
-    del y_value[-1]
+    """
+    #del y_value[-1]
 
     sum_time = 30 + 90 + 90
     ax.set_xlim(0, sum_time)
@@ -35,9 +38,10 @@ if __name__ == "__main__":
         t.append(i*f)
 
     plt.scatter(t, y_value, marker="o", linestyle="", color = "red", s = 2)
+    plt.legend(title = "Focus=150[mm]", loc="upper left")
 
-    plt.legend(loc="upper left")
-
+    #ax.set_xticks([30,60,90,120,150,180,210])
+    ax.set_xticks([30,120,210])
     ax.grid(True)
 
     # グラフの表示
