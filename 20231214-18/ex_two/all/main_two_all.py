@@ -117,4 +117,5 @@ async def main() -> None:
         print("照射が終了")
         print(f"実際にかかった時間は{end_time - start_time}秒です")
 
-    
+if __name__ == "__main__":
+    asyncio.run(main())
