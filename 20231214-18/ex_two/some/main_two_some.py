@@ -145,4 +145,5 @@ async def main() -> None:
         print(f"実際にかかった時間は{end_time - start_time}秒です")
         print(f"指定したフェーズドアレイの稼働率は{vibrator_ratio}，実際のフェーズドアレイの稼働率は{len(bessel_vibrator)/(len(bessel_vibrator)+len(non_vibrator))}")
 
-    
+if __name__ == "__main__":
+    asyncio.run(main())
