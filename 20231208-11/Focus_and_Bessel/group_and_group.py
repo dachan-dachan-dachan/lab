@@ -12,20 +12,6 @@ from pyautd3.modulation import Sine
 
 from pyautd3.gain import Focus, Group, Null
 
-import numpy as npimport asyncio
-import ctypes
-import os
-from typing import NoReturn
-
-from pyautd3 import AUTD3, Controller, Silencer
-from pyautd3.gain import Focus
-from pyautd3.gain import Bessel
-from pyautd3.gain import Plane
-from pyautd3.link.soem import SOEM, OnErrFunc
-from pyautd3.modulation import Sine
-
-from pyautd3.gain import Focus, Group, Null
-
 import numpy as np
 import math
 
