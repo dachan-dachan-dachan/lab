@@ -146,3 +146,6 @@ async def main() -> None:
         print("照射が終了")
         print(f"実際にかかった時間は{end_time - start_time}秒です")
         print(f"Bessel：Focus={len(bessel_vibrator)}：{len(non_vibrator)}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
