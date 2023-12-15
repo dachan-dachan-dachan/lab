@@ -13,6 +13,8 @@ from pyautd3.modulation import Sine
 
 from pyautd3.gain import Focus, Group, Null
 
+from pyautd3.modulation import Static
+
 
 import time
 import math
@@ -115,7 +117,8 @@ async def main() -> None:
         g_bessel = Bessel(first_argument, second_argument, third_argument)
         
         g = (Group(lambda _, tr: "b" if tr.idx in bessel_vibrator else "n").set_gain("b", g_bessel).set_gain("n", g_null))
-        m = Sine(150)
+        #m = Sine(150)
+        m = Static()#変調無し
 
         print("照射を開始")
         start_time = time.time()
