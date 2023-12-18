@@ -110,7 +110,7 @@ async def main() -> None:
             for i in range(0, 18*14):
                 if i == 19 or i == 20 or i == 34:
                     pass
-                elif (i%18) <= (17*2*x_L/L_x):#負側
+                elif (i%18) <= (17*((2*x_L) + L_x)/L_x):#負側
                     bessel_vibrator.append(i)
                 else:#正側
                     non_vibrator.append(i)
