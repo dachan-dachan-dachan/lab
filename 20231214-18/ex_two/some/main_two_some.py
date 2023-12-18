@@ -32,7 +32,7 @@ def on_err(msg: ctypes.c_char_p) -> None:
     print(msg.decode("utf-8"), end="")
 
 
-def element_vector(vector):#ベクトルはを入れると，その単位ベクトルを返す
+def element_vector(vector):#ベクトルを入れると，その単位ベクトルを返す
     return (vector / math.sqrt(np.dot(vector, vector)))
 
 
