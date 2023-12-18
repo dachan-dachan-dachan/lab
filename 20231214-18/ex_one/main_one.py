@@ -40,6 +40,8 @@ def adjustment(list):#振動子のリストをネジの分ずらす調整をす�
             re_list.append(list[i] - 2)
         elif list[i] > 34:
             re_list.append(list[i] - 3)
+        elif list[i] < 19:
+            re_list.append(list[i])
     return re_list
 
 
