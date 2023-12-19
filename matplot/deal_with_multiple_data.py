@@ -42,8 +42,8 @@ if __name__ == "__main__":
     plt.scatter(t, df, marker="o", label = f"x_L=40_non-directivity", s=scatter_size)
     
 
-    plt.legend(loc="upper left")
-
+    #plt.legend(loc="upper left", fontsize=17, ncol=2)
+    plt.legend(loc="upper left", fontsize=17)
 
     ax.grid(True)
 
