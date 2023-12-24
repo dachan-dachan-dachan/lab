@@ -45,7 +45,7 @@ if __name__ == "__main__":
         data_number = len(df)
         x.append(k)
         y.append(max(df))
-    ax.bar(x, y, width = -2, align='edge', label = "max value with [-]", color = "blue")
+    ax.bar(x, y, width = -2, align = "edge", label = "max value with [-]", color = "blue")
 
     for k in range(-12, 13, 6):
         x_ticks.append(k)
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         data_number = len(df)
         x.append(k)
         y.append(max(df))
-    ax2.bar(x, upper_t, width = 2, align='edge', label = "max value without [-]", color = "green")
+    ax2.bar(x, upper_t, width = 2, align = "edge", label = "max value without [-]", color = "green")
     
     
     plt.xticks(x_ticks)
