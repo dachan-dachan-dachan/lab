@@ -48,14 +48,23 @@ if __name__ == "__main__":
     ax.bar(x, y, width = -2, align = "edge", label = "max value with [-]", color = "blue")
 
     for k in range(-12, 13, 6):
-        x_ticks.append(k)
+        #x_ticks.append(k)
         file_name = f"20231224-phi={k}_1.csv"
         df = pd.read_csv(file_name, header=None)
         df = df.iloc[0:, 0].values
         data_number = len(df)
         x.append(k)
         y.append(max(df))
-    ax2.bar(x, upper_t, width = 2, align = "edge", label = "max value without [-]", color = "green")
+    ax2.bar(x, upper_t, width = 2, align = "edge", label = "max value without [-]", color = "red")
+
+    file_name = "20231224_1.csv"
+    df = pd.read_csv(file_name, header=None)
+    df = df.iloc[0:, 0].values
+    x = [-50, 50]
+    y = [max(df), max(df)]
+    ax3 = ax.twinx()
+    ax3.set_ylim(y_valid_min, y_lim)
+    ax3.plot(x, y, label = "max value only [-]", marker = "", linestyle = "-", color = "green")
     
     
     plt.xticks(x_ticks)
@@ -66,6 +75,9 @@ if __name__ == "__main__":
 
     ax.grid(True)
     ax2.grid(True)
+
+    ax3.legend(loc="upper center", fontsize=17, ncol=5)
+    ax3.grid(True)
 
     # グラフの表示
     plt.show()
