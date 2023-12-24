@@ -98,30 +98,24 @@ async def main() -> None:
 
         bessel_vibrator = []
         non_vibrator = []
-        if x_L >= 0:#軸は正側
-            for i in range(0, 18*14):
-                if i == 19 or i == 20 or i == 34:
-                    pass
-                elif (i%18) >= (17*2*x_L/L_x):#正側
-                    bessel_vibrator.append(i)
-                else:#負側
-                    non_vibrator.append(i)
-        else:#軸は負側
-            for i in range(0, 18*14):
-                if i == 19 or i == 20 or i == 34:
-                    pass
-                elif (i%18) <= (17*((2*x_L) + L_x)/L_x):#負側
-                    bessel_vibrator.append(i)
-                else:#正側
-                    non_vibrator.append(i)
+        for i in range(0, 18*14):
+            if i == 19 or i == 20 or i == 34:
+                pass
+            elif (i%18) >= (18*2/3):#後ろから見て左側(2)
+                bessel_vibrator.append(i)
+            else:#右側(1)
+                non_vibrator.append(i)
+                
 
-        bessel_vibrator = adjustment(bessel_vibrator)
-        non_vibrator= adjustment(non_vibrator)
+        bessel_vibrator_A = adjustment(bessel_vibrator)
+        bessel_vibrator_B= adjustment(non_vibrator)
 ###########################
-        g_null = Null()
-        g_bessel = Bessel(first_argument, second_argument, third_argument)
+        g_bessel_A = Bessel(first_argument, second_argument, third_argument)
+        #g_bessel_A = Null()
+        g_bessel_B = Bessel(first_argument, second_argument, third_argument)
+        #g_bessel_B = Null()
         
-        g = (Group(lambda _, tr: "b" if tr.idx in bessel_vibrator else "n").set_gain("b", g_bessel).set_gain("n", g_null))
+        g = (Group(lambda _, tr: "A" if tr.idx in bessel_vibrator_A else "B").set_gain("A", g_bessel_A).set_gain("B", g_bessel_B))
         #m = Sine(150)
         m = Static()#変調無し
 
@@ -134,14 +128,14 @@ async def main() -> None:
             time.sleep(f)
         
         await autd.send_async(m, g)
-        for i in range(int(90/f)):
+        for i in range(int(40/f)):
             value = float(ser.readline().decode("utf-8").rstrip("\n"))
             with open(csv_file, "a", newline="") as file:
                 print('{}'.format(int(value)),file=file)
             time.sleep(f)
 
         await autd.close_async()
-        for i in range(int(60/f)):
+        for i in range(int(10/f)):
             value = float(ser.readline().decode("utf-8").rstrip("\n"))
             with open(csv_file, "a", newline="") as file:
                 print('{}'.format(int(value)),file=file)
@@ -151,7 +145,17 @@ async def main() -> None:
         #autd.close()
         print("照射が終了")
         print(f"実際にかかった時間は{end_time - start_time}秒です")
-        print(f"Bessel：Focus={len(bessel_vibrator)}：{len(non_vibrator)}")
+        print(f"A：B={len(bessel_vibrator_A)}：{len(bessel_vibrator_B)}")
+        for i in range(18*14 - 1, -1, -1):
+            if i%18 == 17:
+                print("\n")
+                if i == 19 or i == 20 or i == 34:
+                    print("X")
+                elif bessel_vibrator[i] == i:
+                    print("A")
+                else:
+                    print("B")
+        print(f"ファイル名：{csv_file}")
 
 if __name__ == "__main__":
     asyncio.run(main())
