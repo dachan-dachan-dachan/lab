@@ -116,8 +116,8 @@ async def main() -> None:
                 non_vibrator.append(i)
                 
 
-        bessel_vibrator_A = adjustment(bessel_vibrator)
-        bessel_vibrator_B= adjustment(non_vibrator)
+        bessel_vibrator_B = adjustment(bessel_vibrator)
+        bessel_vibrator_A= adjustment(non_vibrator)
 ###########################
         g_bessel_A = Bessel(first_argument_A, second_argument_A, third_argument_A)
         #g_bessel_A = Null()
@@ -156,14 +156,14 @@ async def main() -> None:
         print(f"実際にかかった時間は{end_time - start_time}秒です")
         print(f"A：B={len(bessel_vibrator_A)}：{len(bessel_vibrator_B)}")
         for i in range(18*14 - 1, -1, -1):
+            if i == 19 or i == 20 or i == 34:
+                print("X", end="")
+            elif bessel_vibrator[i] == i:
+                print("A", end="")
+            else:
+                print("B", end="")
             if i%18 == 17:
                 print("\n")
-                if i == 19 or i == 20 or i == 34:
-                    print("X")
-                elif bessel_vibrator[i] == i:
-                    print("A")
-                else:
-                    print("B")
         print(f"ファイル名：{csv_file}")
 
 if __name__ == "__main__":
