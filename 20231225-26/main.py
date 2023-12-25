@@ -46,7 +46,7 @@ def adjustment(list):#振動子のリストをネジの分ずらす調整をす�
 
 
 def p_p_d(x_1, y_1, x_2, y_2):
-    return math.sprt(((x_1 - x_2)**2) + ((y_1 - y_2)**2))
+    return math.sqrt(((x_1 - x_2)**2) + ((y_1 - y_2)**2))
 
 def cosine_theorem(a, b, c):
     rad_b_c = math.acos( ( (b**2) + (c**2) - (a**2) ) / (2*b*c) )
