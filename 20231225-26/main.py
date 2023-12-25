@@ -101,11 +101,11 @@ async def main() -> None:
 
 
         first_argument_A = np.array([x_F_A + center_x_A, y_F_A, z_F_A])
-        second_argument_A = [math.cos(math.radians(theat_x_A),0,math.sin(math.radians(theat_x_A))]
+        second_argument_A = [math.cos(math.radians(theat_x_A)),0,math.sin(math.radians(theat_x_A))]
         third_argument_A = cosine_theorem(center_x_A, r_A, p_p_d(0, 0, x_F_A + center_x_A, z_F_A))
 
         first_argument_B = np.array([x_F_B + center_x_B, y_F_B, z_F_B])
-        second_argument_B = [math.cos(math.radians(theat_x_B),0,math.sin(math.radians(theat_x_B))]
+        second_argument_B = [math.cos(math.radians(theat_x_B)),0,math.sin(math.radians(theat_x_B))]
         third_argument_B = cosine_theorem(L_x - center_x_B, r_B, p_p_d(L_x, 0, x_F_B + center_x_B, z_F_B))
 
         bessel_vibrator = []
