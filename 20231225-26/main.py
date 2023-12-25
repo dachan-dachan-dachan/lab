@@ -45,6 +45,13 @@ def adjustment(list):#振動子のリストをネジの分ずらす調整をす�
     return re_list
 
 
+def p_p_d(x_1, y_1, x_2, y_2):
+    return math.sprt(((x_1 - x_2)**2) + ((y_1 - y_2)**2))
+
+def cosine_theorem(A, B, C):
+    rad_B_C = math.acos( ( (B**2) + (C**2) - (A**2) ) / (2*B*C) )
+    return rad_B_C
+
 
 async def main() -> None:
     on_lost_func = OnErrFunc(on_lost)
@@ -64,21 +71,24 @@ async def main() -> None:
 #############################
         #フェーズドアレイの幅
         L_x = 10.16*18#https://shinolab.github.io/autd3/book/jp/Users_Manual/concept.html
+        L_y = 10.16*14
 
-        #センサの位置
-        x_S = 0
-        y_S = 0
-        z_S = 400
+        r_A = 200#右側(1)
+        theat_x_A = 0#degree，反時計回りが正，フェーズドアレイから垂直方向が0．
+        center_x_A = L_x / 6
+        center_y_A = L_y / 2
+        x_F_A = r_A*math.cos(math.radians(theat_x_A))
+        y_F_A = center_y_A
+        z_F_A = r_A*math.sin(math.radians(theat_x_A))
 
-        #始点
-        x_L = L_x / 4
-        y_L = 0
-        z_L = 0
-
-        #焦点の位置
-        x_F = x_L
-        y_F = 0
-        z_F = 200
+        r_B = 400#左側(2)
+        theat_x_B = 60#degree，反時計回りが正，フェーズドアレイから垂直方向が0．
+        center_x_B = 2*L_x / 3
+        center_y_B = L_y / 2
+        x_F_B = r_B*math.cos(math.radians(theat_x_B))
+        y_F_B = center_y_B
+        z_F_B = r_B*math.sin(math.radians(theat_x_B))
+        
 
         f = 0.1
         port_ad = "COM3"
@@ -87,21 +97,20 @@ async def main() -> None:
         csv_file = f"20231210-z_S={z_S}-z_F={z_F}.csv"
 
 
-        #ベッセルビームとフォーカスの境界線
-        #x_L = (L_x*z_F)/(2*z_S)
+        first_argument_A = np.array([x_F_A + center_x_A, y_F_A, z_F_A])
+        second_argument_A = [math.cos(math.radians(theat_x_A),0,math.sin(math.radians(theat_x_A))]
+        third_argument_A = cosine_theorem(center_x_A, r_A, p_p_d(0, 0, x_F_A + center_x_A, z_F_A))
 
-        bottom_line = min(math.fabs((L_x/2)-x_L), math.fabs(x_L+(L_x/2)))
-
-        first_argument = autd.geometry.center + np.array([x_F, y_F, z_F])
-        second_argument = [0,0,1]
-        third_argument = math.atan2(z_F, bottom_line)
+        first_argument_B = np.array([x_F_B + center_x_B, y_F_B, z_F_B])
+        second_argument_B = [math.cos(math.radians(theat_x_B),0,math.sin(math.radians(theat_x_B))]
+        third_argument_B = cosine_theorem(L_x - center_x_B, r_B, p_p_d(L_x, 0, x_F_B + center_x_B, z_F_B))
 
         bessel_vibrator = []
         non_vibrator = []
         for i in range(0, 18*14):
             if i == 19 or i == 20 or i == 34:
                 pass
-            elif (i%18) >= (18*2/3):#後ろから見て左側(2)
+            elif (i%18) >= (12):#後ろから見て左側(2)
                 bessel_vibrator.append(i)
             else:#右側(1)
                 non_vibrator.append(i)
@@ -110,9 +119,9 @@ async def main() -> None:
         bessel_vibrator_A = adjustment(bessel_vibrator)
         bessel_vibrator_B= adjustment(non_vibrator)
 ###########################
-        g_bessel_A = Bessel(first_argument, second_argument, third_argument)
+        g_bessel_A = Bessel(first_argument_A, second_argument_A, third_argument_A)
         #g_bessel_A = Null()
-        g_bessel_B = Bessel(first_argument, second_argument, third_argument)
+        g_bessel_B = Bessel(first_argument_B, second_argument_B, third_argument_B)
         #g_bessel_B = Null()
         
         g = (Group(lambda _, tr: "A" if tr.idx in bessel_vibrator_A else "B").set_gain("A", g_bessel_A).set_gain("B", g_bessel_B))
