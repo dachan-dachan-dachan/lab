@@ -75,6 +75,7 @@ async def main() -> None:
 
         r_A = 200#右側(1)
         theat_x_A = 0#degree，反時計回りが正，フェーズドアレイから垂直方向が0．
+        #theat_x_A = -20, -10, 0, 10
         center_x_A = L_x / 6
         center_y_A = L_y / 2
         x_F_A = r_A*math.cos(math.radians(theat_x_A))
@@ -94,7 +95,9 @@ async def main() -> None:
         port_ad = "COM3"
         port_num = 9600
         ser = serial.Serial(port_ad, port_num)#ポートの情報(str, int)
-        csv_file = f"20231210-z_S={z_S}-z_F={z_F}.csv"
+        csv_file = f"20231225_theat={theat_x_A}_with.csv"
+        #csv_file = f"20231225_theat={theat_x_A}_without.csv"
+        #csv_file = f"20231225_only.csv"
 
 
         first_argument_A = np.array([x_F_A + center_x_A, y_F_A, z_F_A])
