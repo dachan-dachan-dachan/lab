@@ -39,7 +39,7 @@ if __name__ == "__main__":
     x_ticks = []
     for k in range(-12, 13, 6):
         x_ticks.append(k)
-        file_name = f"20231224-phi={k}_0.csv"
+        file_name = f"20231225_theat={theat_x_A}_with.csv"
         df = pd.read_csv(file_name, header=None)
         df = df.iloc[0:, 0].values
         data_number = len(df)
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     for k in range(-12, 13, 6):
         #x_ticks.append(k)
-        file_name = f"20231224-phi={k}_1.csv"
+        file_name = f"20231225_theat={theat_x_A}_without.csv"
         df = pd.read_csv(file_name, header=None)
         df = df.iloc[0:, 0].values
         data_number = len(df)
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         y.append(max(df))
     ax2.bar(x, upper_t, width = 2, align = "edge", label = "max value without [-]", color = "red")
 
-    file_name = "20231224_1.csv"
+    file_name = "20231225_only.csv"
     df = pd.read_csv(file_name, header=None)
     df = df.iloc[0:, 0].values
     x = [-50, 50]
