@@ -10,7 +10,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     ax.set_xlim(0, get_time)
     ax.set_ylim(y_valid_min, y_lim)
-    plt.xticks([10, 40, 10])
+    plt.xticks([10, 50, 60])
 
     plt.xlabel("time [s]")
     plt.ylabel("concentration level [-]")
